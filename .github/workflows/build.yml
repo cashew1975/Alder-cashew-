@@ -93,7 +93,7 @@ jobs:
       - name: Bygg
         run: |
           set -o pipefail
-          if ! ./gradlew assembleRelease testReleaseUnitTest --stacktrace \
+          if ! ./gradlew assembleRelease testDebugUnitTest --stacktrace \
                -PalderVersionName="$VERSION_NAME" -PalderVersionCode="$VERSION_CODE" 2>&1 | tee build.log; then
             set +e +o pipefail  # felrapporteringen får inte själv avbryta när en grep inte hittar något
             grep -E '^e: |FAILED$' build.log | head -8 | while IFS= read -r line; do echo "::error::$line"; done
