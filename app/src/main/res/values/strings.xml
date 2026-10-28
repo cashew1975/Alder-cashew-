@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Working name; the app gets its real name later. -->
-    <string name="app_name">Alder</string>
+    <!-- Fork name, so it can be told apart from upstream Alder on the same TV. -->
+    <string name="app_name">Alder+</string>
 </resources>

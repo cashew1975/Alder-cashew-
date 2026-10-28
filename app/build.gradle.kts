@@ -10,11 +10,14 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "dev.alder"
+        // Own id (namespace stays dev.alder, so the code is untouched): installs next to upstream Alder instead of over it.
+        applicationId = "se.cashew.alder"
         minSdk = 26
         targetSdk = 36
-        versionCode = 4
-        versionName = "1.1"
+        // CI sets both from the release tag (v1.2 -> "1.2") and the run number, so the in-app update check, which
+        // compares the tag with versionName, never offers the version that is already installed.
+        versionCode = (findProperty("alderVersionCode") as String?)?.toInt() ?: 4
+        versionName = (findProperty("alderVersionName") as String?) ?: "1.1"
         // TVs are ARM; the x86 builds of ffmpeg's native code would only add size.
         ndk { abiFilters += listOf("armeabi-v7a", "arm64-v8a") }
     }

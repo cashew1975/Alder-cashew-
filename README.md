@@ -1,3 +1,7 @@
+> **Alder+** is a modified fork of [aradhyas8/Alder](https://github.com/aradhyas8/Alder), maintained by cashew1975.
+> It has its own app id, name, update channel and CI build. See [docs/FORK.md](docs/FORK.md) for what changed and how to build and release it.
+> The original README follows below.
+
 <h1 align="center">Alder</h1>
 
 <p align="center">

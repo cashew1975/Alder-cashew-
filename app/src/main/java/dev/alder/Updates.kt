@@ -15,7 +15,8 @@ import java.net.URL
  * on an older version, and Android's package installer puts it in place (same signing key, so data stays).
  */
 object Updates {
-    private const val LATEST = "https://api.github.com/repos/aradhyas8/Alder/releases/latest"
+    // This fork's own releases: upstream's APKs carry another signing key and id, so Android would refuse them anyway.
+    private const val LATEST = "https://api.github.com/repos/cashew1975/Alder-cashew-/releases/latest"
     private const val DAY = 24 * 3600_000L
 
     class Release(val version: String, val apk: String)
