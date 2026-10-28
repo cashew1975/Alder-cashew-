@@ -88,3 +88,17 @@ git merge upstream/main
 ```
 
 Konflikter uppstår oftast i `app/build.gradle.kts`, `strings.xml` och `Updates.kt`, alltså raderna som ändrats för forken. Behåll forkens värden där.
+
+## Kodstil: Ponytail-skills
+
+Under `.claude/skills/` ligger skills från [Ponytail](https://github.com/DietrichGebert/ponytail) (v5.3.2, commit `09c434a`, MIT-licens, se `.claude/skills/ponytail/LICENSE`). Originalutvecklaren skriver Alder i samma stil, så forken fortsätter i den. Claude Code läser dem automatiskt när du arbetar i repot.
+
+| Skill | Gör |
+|---|---|
+| `ponytail` | Minsta ändring som löser hela uppgiften. Återanvänd det som finns, inga onödiga beroenden eller abstraktioner. Säkerhet, validering och felhantering kapas aldrig. |
+| `ponytail-review` | Granskar en ändring: logik, säkerhet, prestanda, tester och onödig kod. |
+| `ponytail-audit` | Granskar hela repot och rangordnar fynden. |
+| `ponytail-debt` | Listar medvetna genvägar (`shortcut:`- och `ponytail:`-kommentarer) som en skuldlista. |
+| `ponytail-help` | Snabbreferens. |
+
+Bara skillsen är kopierade. Pluginets hooks (skript som körs automatiskt) och `ponytail-gain` är medvetet utelämnade. Uppdatera genom att kopiera in nya `SKILL.md` från originalrepot.
