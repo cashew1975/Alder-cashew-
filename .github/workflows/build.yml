@@ -98,6 +98,8 @@ jobs:
             grep -E '^e: |FAILED$' build.log | head -8 | while IFS= read -r line; do echo "::error::$line"; done
             WRONG="$(sed -n '/What went wrong/,/Try:/p' build.log | head -25 | sed 's/%/%25/g' | sed ':a;N;$!ba;s/\n/%0A/g')"
             [ -n "$WRONG" ] && echo "::error title=Gradle::$WRONG"
+            TAIL="$(grep -v '^\s*at ' build.log | tail -30 | sed 's/%/%25/g' | sed ':a;N;$!ba;s/\n/%0A/g')"
+            echo "::error title=Slutet av loggen::$TAIL"
             exit 1
           fi
 
