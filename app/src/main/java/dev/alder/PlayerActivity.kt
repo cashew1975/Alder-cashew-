@@ -226,7 +226,7 @@ class PlayerActivity : Screen() {
                     main.postDelayed({ if (!isFinishing) player.prepare() }, RETRY_WAIT)
                     return
                 }
-                android.util.Log.w("Alder", "source ${at + 1}/${sources.size} failed: ${e.errorCodeName}", e)
+                android.util.Log.w("Alder", "source ${at + 1}/${sources.size} failed: ${e.errorCodeName}") // no stack: its causes print the stream url
                 next(e.errorCodeName)
             }
 
@@ -305,7 +305,7 @@ class PlayerActivity : Screen() {
             // ponytail: the TV's language and English, three files each in the addon's order; a language picker if asked
             val all = Stremio.addons(key).filter { it.serves("subtitles", type, videoId) }
                 .flatMap { a -> runCatching { a.subtitles(type, videoId) }
-                    .onFailure { android.util.Log.w("Alder", "subtitles from ${a.name} failed", it) }.getOrDefault(emptyList()) }
+                    .onFailure { android.util.Log.w("Alder", "subtitles from ${a.name} failed: ${it.javaClass.simpleName}") }.getOrDefault(emptyList()) }
             all.filter { it.local }.take(3) + all.filter { !it.local && Locale(it.lang).language == "en" }.take(3)
         }) { r ->
             addonSubs = r.getOrDefault(emptyList())

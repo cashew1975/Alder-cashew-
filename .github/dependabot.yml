@@ -1,0 +1,14 @@
+# Föreslår uppdateringar som pull requests: låsta actions (SHA) och Gradle-beroenden. Inget slås ihop automatiskt.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+  - package-ecosystem: gradle
+    directory: /
+    schedule:
+      interval: monthly
+    ignore:
+      # Media3 måste matcha versionen som Jellyfins ffmpeg-avkodare är byggd mot (se app/build.gradle.kts).
+      - dependency-name: "androidx.media3:*"

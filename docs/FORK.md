@@ -38,7 +38,13 @@ Gör om nyckelfilen till text:
 base64 -w0 alderplus-release.jks > alderplus-release.b64   # Linux
 ```
 
-Gå till **Settings → Secrets and variables → Actions → New repository secret** i repot och skapa:
+Nyckeln ska bara kunna användas av release-körningar som du har godkänt. Därför ligger den i en **miljö** (environment), inte bland repots vanliga secrets.
+
+**a. Skapa miljön:** **Settings → Environments → New environment**, döp den till `release` och ställ in:
+- **Required reviewers:** lägg till dig själv. Varje release väntar då på att du klickar **Approve** under Actions.
+- **Deployment branches and tags:** välj *Selected branches and tags* och lägg till branchen `main` och taggmönstret `v*`.
+
+**b. Lägg in nyckeln i miljön:** under **Environment secrets** i miljön `release`, skapa:
 
 | Namn | Värde |
 |---|---|
@@ -50,17 +56,19 @@ Gå till **Settings → Secrets and variables → Actions → New repository sec
 Eller med GitHub CLI:
 
 ```bash
-gh secret set KEYSTORE_BASE64 < alderplus-release.b64
-gh secret set KEYSTORE_PASSWORD
-gh secret set KEY_ALIAS --body alderplus
-gh secret set KEY_PASSWORD
+gh secret set KEYSTORE_BASE64 --env release < alderplus-release.b64
+gh secret set KEYSTORE_PASSWORD --env release
+gh secret set KEY_ALIAS --env release --body alderplus
+gh secret set KEY_PASSWORD --env release
 ```
 
-Radera `alderplus-release.b64` när du är klar.
+Radera `alderplus-release.b64` när du är klar. Ligger nycklarna sedan tidigare under **Settings → Secrets and variables → Actions → Repository secrets**, ta bort dem därifrån, annars kringgås godkännandet.
+
+**c. Skydda GitHub-kontot** med passkey eller tvåfaktorsinloggning (**Settings → Password and authentication** på ditt konto). Den som kommer åt kontot kan annars godkänna en release själv.
 
 ## 3. Bygga och släppa
 
-- **Testbygge:** varje push till `main` bygger en APK. Den finns under **Actions → körningen → Artifacts → AlderPlus-…**.
+- **Testbygge:** varje push till `main` bygger en APK, signerad med debug-nyckeln (testbyggen rör aldrig release-nyckeln). Den finns under **Actions → körningen → Artifacts → AlderPlus-…**.
 - **Release med en knapp (enklast):** gå till **Actions → Build → Run workflow**, skriv in en version som är högre än den förra (till exempel `1.3`) och klicka **Run workflow**. Flödet skapar själv taggen `v1.3`. Det fungerar även från mobilen.
 - **Release med git:** skapa och pusha en tagg. Versionen tas från taggen:
 
@@ -69,7 +77,7 @@ Radera `alderplus-release.b64` när du är klar.
   git push origin v1.3
   ```
 
-  I båda fallen bygger flödet, signerar och lägger upp `AlderPlus.apk` under **Releases**. Installerade TV-appar hittar den via den inbyggda uppdateringen.
+  I båda fallen väntar körningen på ditt godkännande (**Review deployments → Approve** på körningens sida). Sedan bygger flödet, signerar och lägger upp `AlderPlus.apk` under **Releases**. Installerade TV-appar hittar den via den inbyggda uppdateringen, och TV:n frågar alltid innan den installerar.
 
 En release vägrar byggas utan signeringsnyckel, så en osignerad version kan aldrig hamna på TV:n av misstag.
 

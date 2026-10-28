@@ -59,8 +59,8 @@ object Updates {
         val installer = c.packageManager.packageInstaller
         val params = PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL)
         params.setAppPackageName(c.packageName)
-        // Android 12+ can skip the confirm box when Alder installed itself last time; otherwise Android asks.
-        if (Build.VERSION.SDK_INT >= 31) params.setRequireUserAction(PackageInstaller.SessionParams.USER_ACTION_NOT_REQUIRED)
+        // Always ask on the TV: a release is signed on GitHub, so a taken-over GitHub account must not install silently.
+        if (Build.VERSION.SDK_INT >= 31) params.setRequireUserAction(PackageInstaller.SessionParams.USER_ACTION_REQUIRED)
         val id = installer.createSession(params)
         installer.openSession(id).use { session ->
             try {

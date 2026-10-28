@@ -1224,7 +1224,7 @@ class MainActivity : Screen() {
                             (if (quick) catalog.addon.savedCatalog(catalog, picked) else null)?.let { it to true }
                                 ?: (catalog.addon.catalog(catalog, picked, CATALOG_WAIT) to false)
                         }.getOrElse { e ->
-                            android.util.Log.w("Alder", "row $title (${catalog.id}, genre $picked) failed: $e")
+                            android.util.Log.w("Alder", "row $title (${catalog.id}, genre $picked) failed: ${e.javaClass.simpleName}") // not $e: its message can hold the addon url and its key
                             emptyList<Meta>() to false
                         }
                     }) { answer ->
