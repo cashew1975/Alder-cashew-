@@ -61,14 +61,15 @@ Radera `alderplus-release.b64` när du är klar.
 ## 3. Bygga och släppa
 
 - **Testbygge:** varje push till `main` bygger en APK. Den finns under **Actions → körningen → Artifacts → AlderPlus-…**.
-- **Release:** skapa och pusha en tagg. Versionen tas från taggen:
+- **Release med en knapp (enklast):** gå till **Actions → Build → Run workflow**, skriv in en version som är högre än den förra (till exempel `1.3`) och klicka **Run workflow**. Flödet skapar själv taggen `v1.3`. Det fungerar även från mobilen.
+- **Release med git:** skapa och pusha en tagg. Versionen tas från taggen:
 
   ```bash
-  git tag v1.2
-  git push origin v1.2
+  git tag v1.3
+  git push origin v1.3
   ```
 
-  Flödet bygger, signerar och lägger upp `AlderPlus.apk` under **Releases**. Installerade TV-appar hittar den via den inbyggda uppdateringen.
+  I båda fallen bygger flödet, signerar och lägger upp `AlderPlus.apk` under **Releases**. Installerade TV-appar hittar den via den inbyggda uppdateringen.
 
 En release vägrar byggas utan signeringsnyckel, så en osignerad version kan aldrig hamna på TV:n av misstag.
 
