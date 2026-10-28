@@ -88,8 +88,18 @@ jobs:
           echo "VERSION_NAME=$NAME" >> "$GITHUB_ENV"
           echo "VERSION_CODE=$((GITHUB_RUN_NUMBER + 100))" >> "$GITHUB_ENV"
 
+      # Vid fel lyfts Gradles "What went wrong" och kompileringsfelen upp som annoteringar, så att felet syns
+      # direkt på körningens sida (och via API:t) utan att man behöver ladda ner hela loggen.
       - name: Bygg
-        run: ./gradlew assembleRelease testReleaseUnitTest -PalderVersionName="$VERSION_NAME" -PalderVersionCode="$VERSION_CODE"
+        run: |
+          set -o pipefail
+          if ! ./gradlew assembleRelease testReleaseUnitTest --stacktrace \
+               -PalderVersionName="$VERSION_NAME" -PalderVersionCode="$VERSION_CODE" 2>&1 | tee build.log; then
+            grep -E '^e: |FAILED$' build.log | head -8 | while IFS= read -r line; do echo "::error::$line"; done
+            WRONG="$(sed -n '/What went wrong/,/Try:/p' build.log | head -25 | sed 's/%/%25/g' | sed ':a;N;$!ba;s/\n/%0A/g')"
+            [ -n "$WRONG" ] && echo "::error title=Gradle::$WRONG"
+            exit 1
+          fi
 
       - name: Döp APK:n
         run: cp app/build/outputs/apk/release/*.apk AlderPlus.apk
